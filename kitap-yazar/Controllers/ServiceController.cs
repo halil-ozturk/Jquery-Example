@@ -16,31 +16,19 @@ namespace kitap_yazar.Controllers
         {
             _db = context;
         }
-        [ActionName("getbook")]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BookInfoDto>> GetBook(int id)
-        {
-            BookInfoDto2 book = await _db.Books
-            .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name })
-            .SingleOrDefaultAsync(x => x.BookID == id);
-
-            if (book == null)
-                return NotFound("Ýstenilen kitap bulunamadý");
-            return Ok(book);
-        }
-
 
 
         [ActionName("getallbooks")]
-        [HttpGet("{ks} , {sn}")]
-        public async Task<IActionResult> GetBooks(int ks, int sn)
+        //[HttpGet("{bc}/{pn}")]
+
+        public async Task<IActionResult> GetBooks(int bc, int pn)
         {
-            var gelecekKitap = (sn - 1) * 10;
-            if (sn == 1)
+            var gelecekKitap = (pn - 1) * 10;
+            if (gelecekKitap == 0)
             {
                 List<BookInfoDto2> books = await _db.Books
-                .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name }).Take(ks)
-                .ToListAsync();
+            .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name }).Take(bc)
+            .ToListAsync();
                 if (books.Count == 0)
                 {
                     return Ok("Kitap yok!");
@@ -52,18 +40,9 @@ namespace kitap_yazar.Controllers
             }
             else
             {
-                List<BookInfoDto2> books = await _db.Books.Where(x=>x.Name.Length == gelecekKitap).Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name }).Take(ks).ToListAsync();
-                return Ok(books);
-            }
-        }
-
-        [ActionName("getbooks")]
-        public async Task<IActionResult> GetBooks()
-        {
-            {
                 List<BookInfoDto2> books = await _db.Books
-                .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name }).Take(10)
-                .ToListAsync();
+           .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name }).Skip(gelecekKitap).Take(bc)
+           .ToListAsync();
                 if (books.Count == 0)
                 {
                     return Ok("Kitap yok!");
@@ -73,24 +52,12 @@ namespace kitap_yazar.Controllers
                     return Ok(books);
                 }
             }
+
+
+            //List<PaginationResponseDto> paginationResponses = _db.Books.Select(y => new PaginationResponseDto() { PageCount = (y.Name.Length / 10) + 1, BookCount = y.Name.Length }).ToList();
+
+
         }
-
-        [ActionName("author")]
-        [HttpGet("{id}")]
-        public IActionResult GetBooksByAuthor(int id)
-        {
-            List<BookInfoDto2> books = _db.Books
-                    .Where(x => x.AuthorID == id)
-                    .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name })
-                    .ToList();
-
-
-            if (books.Count == 0)
-                return Ok("yazarýn hiç kitabý yok");
-            return Ok(books);
-        }
-
-
 
         [ActionName("getallauthors")]
         [HttpGet]
@@ -110,7 +77,7 @@ namespace kitap_yazar.Controllers
 
 
         [ActionName("postauthor")]
-        [HttpPost]  
+        [HttpPost]
         public IActionResult AddAuthor([FromBody] AuthorInfoDto authorDto)
         {
             if (!ModelState.IsValid)
@@ -126,6 +93,7 @@ namespace kitap_yazar.Controllers
 
             return Ok("Ekleme baþarýlý");
         }
+
 
         [ActionName("postbook")]
         [HttpPost]
