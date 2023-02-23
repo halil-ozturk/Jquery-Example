@@ -51,7 +51,13 @@
 		<hr />
 		<div class="row">
 
-
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<button id="searchButton" class="input-group-text">Ara</button>
+				</div>
+				<input id="searchBookID" type="text" aria-label="Kitap Adı" class="form-control" placeholder="Kitap Adı Giriniz..">
+				<input id="searchAuthorID" type="text" aria-label="Yazar Adı" class="form-control" placeholder="Yazar Adı Giriniz..">
+			</div>
 
 			<table class="mt-2 table table-striped table-dark">
 				<thead>
@@ -67,7 +73,7 @@
 
 
 			<div class="col-md-12">
-				<nav aria-label="Page navigation example">
+				<nav id="pageNav" aria-label="Page navigation example">
 					<ul id="paginationBody" class="pagination">
 					</ul>
 					<div class="dropdown">
@@ -100,6 +106,7 @@
 	<script>
 		yazarlariGetir();
 		hideMessage();
+
 		$(document).ready(function () {
 			let bookCount = 10;
 			let pageNumber = 1;
@@ -121,7 +128,7 @@
 						var pageNumber = index + 1;
 						let siraNo = index + 1;
 						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
-						$("#paginationBody").append("<li onclick='selectPage("+ pageNumber +")' class='page-item'><a class='page-link' href='#'>" + pageNumber + "</a></li>");
+						$("#paginationBody").append("<li onclick='selectPage(" + pageNumber + ")' class='page-item'><a class='page-link' href='#'>" + pageNumber + "</a></li>");
 					})
 					$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
 				},
@@ -131,8 +138,46 @@
 				}
 			})
 		});
-		function selectPage(pageNo){
-			cleanTable();
+
+		$("#searchButton").click(function () {
+			let searchBook = $("#searchBookID").val();
+			let searchAuthor = $("#searchAuthorID").val();
+			let postData = {
+				sb: searchBook,
+				sa: searchAuthor,
+			};
+
+			$.ajax({
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				type: 'GET',
+				url: '/api/service/searchbookorauthor',
+				data: postData,
+				success: function (books) {
+					cleanTable();
+					var pageNumber = books.length;
+					pageNumber = Math.round(pageNumber/10);
+					$("#paginationBody").append("<li class='page-item'><a class='page-link' href = '#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span><span class='sr-only'> Previous </span></a></li>");
+					for(var i = 1; i <= pageNumber; i++)
+					{
+						$("#paginationBody").append("<li onclick='selectPage(" + i + ")' class='page-item'><a class='page-link' href='#'>" + i + "</a></li>");
+					}
+					$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
+					$.each(books, function (index, value) {
+						let siraNo = index + 1;
+						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
+					})
+				},
+				error: function (xhr) {
+					$("#Message").html("");
+					$("#Message").html("<span class='text-danger'>Kitap yok!</span>");
+				}
+			})
+		});
+
+		function selectPage(pageNo) {
 			let bookCount = 10;
 			let pageNumber = pageNo;
 			let postData = {
@@ -148,10 +193,16 @@
 				url: '/api/service/getallbooks',
 				data: postData,
 				success: function (books) {
+					cleanTable();
+					$("#paginationBody").append("<li class='page-item'><a class='page-link' href = '#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span><span class='sr-only'> Previous </span></a></li>");
 					$.each(books, function (index, value) {
 						var siraNo = index + 1;
+						var pageNumber = index + 1;
 						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
+						$("#paginationBody").append("<li onclick='selectPage(" + pageNumber + ")' class='page-item'><a class='page-link' href='#'>" + pageNumber + "</a></li>");
+
 					})
+					$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
 				},
 				error: function (xhr) {
 					$("#Message").html("");
@@ -193,6 +244,8 @@
 		}
 		function cleanTable() {
 			$("#tableBody tr").remove();
+			$("#paginationBody").remove();
+			$("#pageNav").append("<ul id='paginationBody' class='pagination'></ul>");
 		};
 		//$("#kitaplariGetir").click(function () {
 		//	cleanTable();

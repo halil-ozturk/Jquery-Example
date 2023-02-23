@@ -40,9 +40,10 @@ namespace kitap_yazar.Controllers
             }
             else
             {
-                List<BookInfoDto2> books = await _db.Books
+                List<BookInfoDto2> books = await _db.Books.Include(x => x.Author)
            .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name }).Skip(gelecekKitap).Take(bc)
            .ToListAsync();
+
                 if (books.Count == 0)
                 {
                     return Ok("Kitap yok!");
@@ -52,12 +53,27 @@ namespace kitap_yazar.Controllers
                     return Ok(books);
                 }
             }
-
-
-            //List<PaginationResponseDto> paginationResponses = _db.Books.Select(y => new PaginationResponseDto() { PageCount = (y.Name.Length / 10) + 1, BookCount = y.Name.Length }).ToList();
-
-
         }
+
+
+        [ActionName("searchbookorauthor")]
+        public async Task<IActionResult> SearchBooks(string? sb = null, string? sa = null)
+        {
+            List<BookInfoDto2> books = await _db.Books.Include(x => x.Author)
+           .Select(x => new BookInfoDto2() { BookID = x.BookID, Name = x.Name, AuthorName = x.Author.Name })
+           .Where(x => x.Name.Contains(sb) || x.AuthorName.Contains(sa))
+           .ToListAsync();
+
+            if (books.Count == 0)
+            {
+                return Ok("Kitap yok!");
+            }
+            else
+            {
+                return Ok(books);
+            }
+        }
+
 
         [ActionName("getallauthors")]
         [HttpGet]
