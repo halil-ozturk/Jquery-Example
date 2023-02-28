@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using kitap_yazar.Models;
+using kitap_yazar.DOMAIN.Models;
 
 #nullable disable
 
 namespace kitap_yazar.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
+    [DbContext(typeof(KitapYazarDatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -1,4 +1,5 @@
-using kitap_yazar.Models;
+using kitap_yazar.BLL;
+using kitap_yazar.BLL.Services.Kitap;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,12 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddMvc();
 
+builder.Services.AddScoped<IKitapService, KitapService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddEntityFrameworkNpgsql()
-               .AddDbContext<DatabaseContext>();
+builder.Services.AddEntityFrameworkNpgsql().AddKitapYazarDbContext();
 
 var app = builder.Build();
 

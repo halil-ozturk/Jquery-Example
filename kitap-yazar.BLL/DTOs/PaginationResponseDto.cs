@@ -1,6 +1,6 @@
-﻿using kitap_yazar.Models;
+﻿
 
-namespace kitap_yazar.DTOs
+namespace kitap_yazar.BLL.DTOs
 {
     public class PaginationResponseDto
     {

@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using kitap_yazar.Models;
+using kitap_yazar.DOMAIN.Models;
 
 #nullable disable
 
 namespace kitap_yazar.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
-    [Migration("20230215113757_initial")]
-    partial class initial
+    [DbContext(typeof(KitapYazarDatabaseContext))]
+    [Migration("20230215130814_initial1")]
+    partial class initial1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,11 +44,11 @@ namespace kitap_yazar.Migrations
 
             modelBuilder.Entity("kitap_yazar.Models.Book", b =>
                 {
-                    b.Property<int>("BookId")
+                    b.Property<int>("BookID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BookId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BookID"));
 
                     b.Property<int>("AuthorID")
                         .HasColumnType("integer");
@@ -58,7 +58,7 @@ namespace kitap_yazar.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.HasKey("BookId");
+                    b.HasKey("BookID");
 
                     b.HasIndex("AuthorID");
 

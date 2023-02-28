@@ -4,11 +4,11 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace kitap_yazar.Models
+namespace kitap_yazar.DOMAIN.Models
 {
-    public class DatabaseContext : DbContext
+    public class KitapYazarDatabaseContext : DbContext
     {
-        public DatabaseContext() : base()
+        public KitapYazarDatabaseContext() : base()
         {
             ChangeTracker.LazyLoadingEnabled = false;
         }
@@ -16,6 +16,5 @@ namespace kitap_yazar.Models
             => optionsBuilder.UseNpgsql("Host=localhost; Database=halilDB; Username=postgres; Password=123456");
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
-
     }
 }

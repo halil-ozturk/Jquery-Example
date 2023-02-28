@@ -1,11 +1,11 @@
 ﻿using System;
-namespace kitap_yazar.DTOs
+namespace kitap_yazar.BLL.DTOs
 {
-    public class BookInfoDto2
+    public class BookInfoDto
     {
         public int BookID { get; set; }
         public string Name { get; set; }
-        public string AuthorName { get; set; }
+        public int AuthorID { get; set; }
 
     }
 }

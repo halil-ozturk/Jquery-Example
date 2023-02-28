@@ -247,33 +247,6 @@
 			$("#paginationBody").remove();
 			$("#pageNav").append("<ul id='paginationBody' class='pagination'></ul>");
 		};
-		//$("#kitaplariGetir").click(function () {
-		//	cleanTable();
-		//	let kitapSayisi = 10;
-		//	let sayfaSayisi = $("#denemeID").val();
-		//	var postData = {
-		//		ks: kitapSayisi,
-		//		sn: sayfaSayisi,
-		//	};
-		//	$.ajax({
-		//		headers: {
-		//			'Accept': 'application/json',
-		//			'Content-Type': 'application/json'
-		//		},
-		//		type: 'GET',
-		//		url: '/api/service/getallbooks',
-		//		success: function (books) {
-		//			$.each(books, function (index, value) {
-		//				let siraNo = index + 1;
-		//				$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
-		//			})
-		//		},
-		//		error: function (xhr) {
-		//			$("#Message").html("");
-		//			$("#Message").html("<span class='text-danger'>Kitap yok!</span>");
-		//		}
-		//	});
-		//});
 		$("#yazarlariGetir").click(function () {
 			$.ajax({
 				type: 'GET',
