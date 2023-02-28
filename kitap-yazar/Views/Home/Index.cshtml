@@ -49,7 +49,7 @@
 			</div>
 		</div>
 		<hr />
-		<div class="row">
+		<div class="row" id="tableRow">
 
 			<div class="input-group">
 				<div class="input-group-prepend">
@@ -98,6 +98,8 @@
 			<div class="col-md-12">
 				<div id="getAuthorsArea">
 					<ul id="getAuthors"></ul>
+				</div>
+				<div id="getAuthorBookCount">
 				</div>
 			</div>
 		</div>
@@ -195,6 +197,7 @@
 						var pageNumber = index + 1;
 						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.author.name + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
 					})
+					document.getElementById('tableRow').scrollIntoView();
 				},
 				error: function (xhr) {
 					$("#Message").html("");
@@ -373,6 +376,16 @@
 				}
 			});
 		});
+
+		$("#yazarKitapFiltre").click(()=>{
+			$.ajax({
+				type: 'GET',
+				url: '/api/service/getauthorbookcount',
+				success: function (response) {
+					$("#getAuthorBookCount").html(JSON.stringify(response))
+				}
+			});
+		})
 
 	</script>
 </body>

@@ -11,6 +11,6 @@ namespace kitap_yazar.BLL.Services.Yazar
     {
         Task<List<AuthorInfoDto>> GetAuthors();
         AuthorInfoDto AddAuthor(AuthorInfoDto authorInfoDto);
-        //Task<List<AuthorInfoDto>> TotalBookCount();
+        Task<IEnumerable<object>> TotalBookCount();
     }
 }

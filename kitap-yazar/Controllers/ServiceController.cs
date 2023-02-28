@@ -31,6 +31,14 @@ namespace kitap_yazar.Controllers
             return Ok(cevap);
         }
 
+        [ActionName("getauthorbookcount")]
+        [HttpGet]
+        public async Task<IActionResult> GetAuthorBookCount()
+        {
+            var cevap = await _authorService.TotalBookCount();
+            return Ok(cevap);
+        }
+
         [ActionName("getpagecount")]
         [HttpGet]
         public int GetPageCount(int it)
