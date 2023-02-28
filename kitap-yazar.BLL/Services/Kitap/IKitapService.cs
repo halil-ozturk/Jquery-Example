@@ -1,4 +1,4 @@
-﻿using kitap_yazar.BLL.DTOs;
+﻿using kitap_yazar.BLL.DTOs.Book;
 using System;
 using System.Collections.Generic;
 using System.Linq;

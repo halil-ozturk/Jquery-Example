@@ -1,4 +1,4 @@
-﻿using kitap_yazar.BLL.DTOs;
+﻿using kitap_yazar.BLL.DTOs.Book;
 using kitap_yazar.DOMAIN.Models;
 using Microsoft.EntityFrameworkCore;
 using System;

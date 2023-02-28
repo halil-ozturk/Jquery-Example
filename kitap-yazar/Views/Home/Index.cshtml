@@ -62,7 +62,7 @@
 			<table class="mt-2 table table-striped table-dark">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
+						<th scope="col">No</th>
 						<th scope="col">Kitabın Adı</th>
 						<th scope="col">Yazar</th>
 					</tr>
@@ -73,19 +73,17 @@
 
 
 			<div class="col-md-12">
-				<nav id="pageNav" aria-label="Page navigation example">
+				<div class="dropdown">
+					<a style="background-color: greenyellow">Her Sayfada Kaç Kitap Gösterileceğini Seçiniz.</a>
+					<a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+					<div id="dropdownMenu" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					</div>
+				</div>
+
+				<nav id="pageNav" aria-label="Page navigation example" class="mt-2">
 					<ul id="paginationBody" class="pagination">
 					</ul>
-					<div class="dropdown">
-						<a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Her Sayfada 5 Kitap
-						</a>
-						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-							<a class="dropdown-item" href="#">Her Sayfada 5 Kitap</a>
-							<a class="dropdown-item active" href="#">Her Sayfada 10 Kitap</a>
-							<a class="dropdown-item" href="#">Her Sayfada 20 Kitap</a>
-						</div>
-					</div>
+
 				</nav>
 			</div>
 		</div>
@@ -93,6 +91,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<button class="btn btn-warning form-control" id="yazarlariGetir">Yazarları Getir</button>
+			</div>
+			<div class="col-md-12">
+				<button class="btn btn-warning form-control mt-2" id="yazarKitapFiltre">Hangi Yazarın Kaç Kitabı Var?</button>
 			</div>
 			<div class="col-md-12">
 				<div id="getAuthorsArea">
@@ -104,7 +105,9 @@
 	</div>
 
 	<script>
+
 		yazarlariGetir();
+
 		hideMessage();
 
 		$(document).ready(function () {
@@ -114,6 +117,7 @@
 				bc: bookCount,
 				pn: pageNumber,
 			};
+			fillPagination(bookCount);
 			$.ajax({
 				headers: {
 					'Accept': 'application/json',
@@ -122,15 +126,17 @@
 				type: 'GET',
 				url: '/api/service/getallbooks',
 				data: postData,
-				success: function (books) {
-					$("#paginationBody").append("<li class='page-item'><a class='page-link' href = '#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span><span class='sr-only'> Previous </span></a></li>");
+				success: function (response) {
+					books = response.items;
+					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 5 + "); selectPage(" + pageNumber + ", " + 5 + ")' class = 'dropdown-item'>5</a>");
+					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 10 + "); selectPage(" + pageNumber + ", " + 10 + ")' class='dropdown-item'>10</a>");
+					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 20 + "); selectPage(" + pageNumber + ", " + 20 + ")' class='dropdown-item'>20</a>");
 					$.each(books, function (index, value) {
+						var author = value.author;
 						var pageNumber = index + 1;
 						let siraNo = index + 1;
-						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
-						$("#paginationBody").append("<li onclick='selectPage(" + pageNumber + ")' class='page-item'><a class='page-link' href='#'>" + pageNumber + "</a></li>");
+						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + author.name + "</td><td style = 'display:none'>" + author.bookID + "</td>< /tr>");
 					})
-					$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
 				},
 				error: function (xhr) {
 					$("#Message").html("");
@@ -139,69 +145,24 @@
 			})
 		});
 
-		$("#searchButton").click(function () {
-			let searchBook = $("#searchBookID").val();
-			let searchAuthor = $("#searchAuthorID").val();
+		function fillPagination(itemCount) {
 			let postData = {
-				sb: searchBook,
-				sa: searchAuthor,
+				it: itemCount,
 			};
-
+			cleanPagination();
 			$.ajax({
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json'
 				},
 				type: 'GET',
-				url: '/api/service/searchbookorauthor',
+				url: '/api/service/getpagecount',
 				data: postData,
-				success: function (books) {
-					cleanTable();
-					var pageNumber = books.length;
-					pageNumber = Math.round(pageNumber/10);
+				success: function (response) {
 					$("#paginationBody").append("<li class='page-item'><a class='page-link' href = '#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span><span class='sr-only'> Previous </span></a></li>");
-					for(var i = 1; i <= pageNumber; i++)
-					{
-						$("#paginationBody").append("<li onclick='selectPage(" + i + ")' class='page-item'><a class='page-link' href='#'>" + i + "</a></li>");
+					for (var i = 1; i <= response; i++) {
+						$("#paginationBody").append("<li onclick='selectPage(" + i + "," + itemCount + ")' class='page-item'><a class='page-link' href='#'>" + i + "</a></li>");
 					}
-					$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
-					$.each(books, function (index, value) {
-						let siraNo = index + 1;
-						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
-					})
-				},
-				error: function (xhr) {
-					$("#Message").html("");
-					$("#Message").html("<span class='text-danger'>Kitap yok!</span>");
-				}
-			})
-		});
-
-		function selectPage(pageNo) {
-			let bookCount = 10;
-			let pageNumber = pageNo;
-			let postData = {
-				bc: bookCount,
-				pn: pageNumber,
-			};
-			$.ajax({
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				type: 'GET',
-				url: '/api/service/getallbooks',
-				data: postData,
-				success: function (books) {
-					cleanTable();
-					$("#paginationBody").append("<li class='page-item'><a class='page-link' href = '#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span><span class='sr-only'> Previous </span></a></li>");
-					$.each(books, function (index, value) {
-						var siraNo = index + 1;
-						var pageNumber = index + 1;
-						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
-						$("#paginationBody").append("<li onclick='selectPage(" + pageNumber + ")' class='page-item'><a class='page-link' href='#'>" + pageNumber + "</a></li>");
-
-					})
 					$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
 				},
 				error: function (xhr) {
@@ -210,22 +171,59 @@
 				}
 			})
 		}
+
+		function selectPage(pageNo, bookCount) {
+			let countBook = bookCount;
+			let pageNumber = pageNo;
+			let postData = {
+				bc: countBook,
+				pn: pageNumber,
+			};
+			cleanTable();
+			$.ajax({
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+				type: 'GET',
+				url: '/api/service/getallbooks',
+				data: postData,
+				success: function (response) {
+					books = response.items;
+					$.each(books, function (index, value) {
+						var siraNo = bookCount * (pageNo - 1) + index + 1;
+						var pageNumber = index + 1;
+						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.author.name + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
+					})
+				},
+				error: function (xhr) {
+					$("#Message").html("");
+					$("#Message").html("<span class='text-danger'>Kitap yok!</span>");
+				}
+			})
+		}
+
 		function hideSpinner() {
 			$("#spinner").fadeOut();
 		}
+
 		function hideMessage() {
 			$("#Message").addClass("d-none")
 		}
+
 		function fadeOutMessage() {
 			$("#Message").fadeOut(1000);
 		}
+
 		function showMessage() {
 			$("#Message").removeClass("d-none");
 			setTimeout(fadeOutMessage, 5000);
 		}
+
 		function showSpinner() {
 			$("#spinnerDiv").addClass("d-flex").removeClass("d-none");
 		}
+
 		function yazarlariGetir() {
 			$.ajax({
 				type: 'GET',
@@ -242,11 +240,60 @@
 				}
 			});
 		}
+
 		function cleanTable() {
 			$("#tableBody tr").remove();
+		};
+
+		function cleanPagination() {
 			$("#paginationBody").remove();
 			$("#pageNav").append("<ul id='paginationBody' class='pagination'></ul>");
 		};
+
+		$("#searchButton").click(function () {
+			let searchBook = $("#searchBookID").val();
+			let searchAuthor = $("#searchAuthorID").val();
+
+
+			if (searchBook == "" && searchAuthor == "") {
+				selectPage(1,10);
+			}
+			else {
+				let postData = {
+					sb: searchBook,
+					sa: searchAuthor,
+				};
+				cleanPagination();
+				$.ajax({
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					type: 'GET',
+					url: '/api/service/searchbookorauthor',
+					data: postData,
+					success: function (books) {
+						cleanTable();
+						//var pageNumber = books.length;
+						//pageNumber = Math.round(pageNumber / 10);
+						//$("#paginationBody").append("<li class='page-item'><a class='page-link' href = '#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span><span class='sr-only'> Previous </span></a></li>");
+						//for (var i = 1; i <= pageNumber; i++) {
+						//	$("#paginationBody").append("<li onclick='selectPage(" + i + ")' class='page-item'><a class='page-link' href='#'>" + i + "</a></li>");
+						//}
+						//$("#paginationBody").append("<li class='page-item'><a class='page-link' href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span><span class='sr-only'>Next</span></a></li>");
+						$.each(books, function (index, value) {
+							let siraNo = index + 1;
+							$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.authorName + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
+						})
+					},
+					error: function (xhr) {
+						$("#Message").html("");
+						$("#Message").html("<span class='text-danger'>Kitap yok!</span>");
+					}
+				})
+			}
+		});
+
 		$("#yazarlariGetir").click(function () {
 			$.ajax({
 				type: 'GET',
@@ -259,6 +306,7 @@
 				}
 			});
 		});
+
 		$("#yazarEkleBtn").click(function () {
 			var yazarAdi = $("#yazarAdi").val();
 			var postData = {
@@ -290,6 +338,7 @@
 				});
 			}
 		});
+
 		$("#kitapEkleBtn").click(function () {
 
 			var kitapAdi = $("#kitapAdi").val();
@@ -324,6 +373,7 @@
 				}
 			});
 		});
+
 	</script>
 </body>
 </html>

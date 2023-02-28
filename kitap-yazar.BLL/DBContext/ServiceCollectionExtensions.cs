@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kitap_yazar.BLL
+namespace kitap_yazar.BLL.DBContext
 {
     public static class ServiceCollectionExtensions
     {

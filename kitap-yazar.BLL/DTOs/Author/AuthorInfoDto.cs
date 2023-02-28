@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace kitap_yazar.BLL.DTOs
+namespace kitap_yazar.BLL.DTOs.Author
 {
     public class AuthorInfoDto
     {
