@@ -23,14 +23,14 @@ namespace kitap_yazar.BLL.Services.Yazar
                 .Select(x => new AuthorInfoDto() { AuthorID = x.AuthorID, AuthorName = x.Name, TotalBook = x.Book.Count() })
                 .ToList();
 
-            
+
 
 
 
             //select a."AuthorID" from public."Authors" a full Outer join public."Books" b on a."AuthorID" = b."AuthorID"
-	        //where b."BookID" is null
+            //where b."BookID" is null
 
-            
+
             return authors;
         }
 
@@ -39,8 +39,21 @@ namespace kitap_yazar.BLL.Services.Yazar
             var author = new Author(authorInfoDto.AuthorName);
 
             _db.Authors.Add(author);
-            _db.SaveChanges();
 
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    _db.SaveChanges();
+
+                    transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    transaction.RollbackAsync();
+                    throw e;
+                }
+            }
             return authorInfoDto;
         }
 

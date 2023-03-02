@@ -52,14 +52,26 @@ namespace kitap_yazar.BLL.Services.Kitap
 
         public BookInfoDto AddBook(BookInfoDto bookInfoDto)
         {
-            var book = new Book();
+            using (var transaction = _db.Database.BeginTransaction())
             {
-                book.Name = bookInfoDto.Name;
-                book.AuthorID = bookInfoDto.AuthorID;
-            };
+                var book = new Book();
+                {
+                    book.Name = bookInfoDto.Name;
+                    book.AuthorID = bookInfoDto.AuthorID;
+                };
 
-            _db.Books.Add(book);
-            _db.SaveChanges();
+                _db.Books.Add(book);
+                try
+                {
+                    _db.SaveChanges();
+                    transaction.CommitAsync();
+                }
+                catch (Exception e)
+                {
+                    transaction.RollbackAsync();
+                    throw e;
+                }
+            }
             return bookInfoDto;
         }
     }
