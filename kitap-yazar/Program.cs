@@ -1,3 +1,4 @@
+using kitap_yazar;
 using kitap_yazar.BLL;
 using kitap_yazar.BLL.DBContext;
 using kitap_yazar.BLL.Repositories.Abstract;
@@ -41,5 +42,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCustomTestMiddleware();
 
 app.Run();

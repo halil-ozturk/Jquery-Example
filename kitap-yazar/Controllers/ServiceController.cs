@@ -1,6 +1,7 @@
 using kitap_yazar.BLL;
 using kitap_yazar.BLL.Repositories.Abstract;
 using kitap_yazar.DOMAIN.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace kitap_yazar.Controllers
@@ -68,6 +69,7 @@ namespace kitap_yazar.Controllers
 
         [ActionName("postauthor")]
         [HttpPost]
+        [Authorize]
         public IActionResult AddAuthor([FromBody] Author author)
         {
             if (!ModelState.IsValid)
