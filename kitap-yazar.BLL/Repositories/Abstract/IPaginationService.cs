@@ -1,14 +1,8 @@
-﻿using kitap_yazar.BLL.DTOs.Book;
-using kitap_yazar.BLL.DTOs.Helper;
+﻿using kitap_yazar.BLL.DTOs.Helper;
 using Microsoft.EntityFrameworkCore.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace kitap_yazar.BLL.Services.Helpers
+namespace kitap_yazar.BLL.Repositories.Abstract
 {
     public interface IPaginationService<T> where T : class
     {

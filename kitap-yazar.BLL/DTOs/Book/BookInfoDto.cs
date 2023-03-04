@@ -6,7 +6,7 @@ namespace kitap_yazar.BLL.DTOs.Book
     {
         public int BookID { get; set; }
         public string Name { get; set; }
-        public int AuthorID { get; set; }
+        public string AuthorName { get; set; }
 
     }
 }

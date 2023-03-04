@@ -1,7 +1,4 @@
-﻿
-using System;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 
 namespace kitap_yazar.DOMAIN.Models

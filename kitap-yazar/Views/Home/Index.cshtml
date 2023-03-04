@@ -113,13 +113,13 @@
 		hideMessage();
 
 		$(document).ready(function () {
-			let bookCount = 10;
-			let pageNumber = 1;
-			let postData = {
-				bc: bookCount,
-				pn: pageNumber,
-			};
-			fillPagination(bookCount);
+			//let bookCount = 10;
+			//let pageNumber = 1;
+			//let postData = {
+			//	bc: bookCount,
+			//	pn: pageNumber,
+			//};
+			fillPagination(10);
 			$.ajax({
 				headers: {
 					'Accept': 'application/json',
@@ -127,18 +127,25 @@
 				},
 				type: 'GET',
 				url: '/api/service/getallbooks',
-				data: postData,
+				//data: postData,
 				success: function (response) {
 					books = response.items;
-					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 5 + "); selectPage(" + pageNumber + ", " + 5 + ")' class = 'dropdown-item'>5</a>");
-					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 10 + "); selectPage(" + pageNumber + ", " + 10 + ")' class='dropdown-item'>10</a>");
-					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 20 + "); selectPage(" + pageNumber + ", " + 20 + ")' class='dropdown-item'>20</a>");
-					$.each(books, function (index, value) {
-						var author = value.author;
-						var pageNumber = index + 1;
-						let siraNo = index + 1;
-						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + author.name + "</td><td style = 'display:none'>" + author.bookID + "</td>< /tr>");
-					})
+					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 5 + "); selectPage(" + 1 + ", " + 5 + ")' class = 'dropdown-item'>5</a>");
+					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 10 + "); selectPage(" + 1 + ", " + 10 + ")' class='dropdown-item'>10</a>");
+					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 20 + "); selectPage(" + 1 + ", " + 20 + ")' class='dropdown-item'>20</a>");
+					for (var i = 0; i < 10; i++) {
+						let siraNo = i + 1;
+						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + response[i].name + "</td><td>" + response[i].author.name + "</td><td style = 'display:none'>" + response[i].bookID + "</td>< /tr>");
+					}
+
+
+
+					//$.each(books, function (index, value) {
+					//	var author = value.author;
+					//	var pageNumber = index + 1;
+					//	let siraNo = index + 1;
+					//	$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + author.name + "</td><td style = 'display:none'>" + author.bookID + "</td>< /tr>");
+					//})
 				},
 				error: function (xhr) {
 					$("#Message").html("");
@@ -175,12 +182,12 @@
 		}
 
 		function selectPage(pageNo, bookCount) {
-			let countBook = bookCount;
-			let pageNumber = pageNo;
-			let postData = {
-				bc: countBook,
-				pn: pageNumber,
-			};
+			//let countBook = bookCount;
+			//let pageNumber = pageNo;
+			//let postData = {
+			//	bc: countBook,
+			//	pn: pageNumber,
+			//};
 			cleanTable();
 			$.ajax({
 				headers: {
@@ -189,14 +196,21 @@
 				},
 				type: 'GET',
 				url: '/api/service/getallbooks',
-				data: postData,
+				//data: postData,
 				success: function (response) {
-					books = response.items;
-					$.each(books, function (index, value) {
-						var siraNo = bookCount * (pageNo - 1) + index + 1;
-						var pageNumber = index + 1;
-						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.author.name + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
-					})
+					//books = response.items;
+					let param = (pageNo - 1) * bookCount;
+					let param2 = param + bookCount;
+					for (var i = param; i < param2; i++) {
+						let siraNo = i + 1;
+						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + response[i].name + "</td><td>" + response[i].author.name + "</td><td style = 'display:none'>" + response[i].bookID + "</td>< /tr>");
+					}
+
+					//$.each(books, function (index, value) {
+					//	var siraNo = bookCount * (pageNo - 1) + index + 1;
+					//	var pageNumber = index + 1;
+					//	$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + value.author.name + "</td><td style = 'display:none'>" + value.bookID + "</td>< /tr>");
+					//})
 					document.getElementById('tableRow').scrollIntoView();
 				},
 				error: function (xhr) {
@@ -236,7 +250,7 @@
 
 					authors.forEach(author => {
 						option = document.createElement("option");
-						option.text = author.authorName;
+						option.text = author.name;
 						option.value = author.authorID;
 						selectList.appendChild(option);
 					});

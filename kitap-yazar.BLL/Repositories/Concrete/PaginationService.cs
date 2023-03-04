@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using kitap_yazar.BLL.DTOs.Book;
 using kitap_yazar.BLL.DTOs.Helper;
+using kitap_yazar.BLL.Repositories.Abstract;
 using kitap_yazar.DOMAIN.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -12,7 +13,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kitap_yazar.BLL.Services.Helpers
+namespace kitap_yazar.BLL.Repositories.Concrete
 {
     public class PaginationService<T> : IPaginationService<T> where T : class
     {
@@ -55,10 +56,6 @@ namespace kitap_yazar.BLL.Services.Helpers
                                  .ToListAsync();
 
                 return new PaginationResponseDto<T> { ItemCount = items.Count, Items = items, PageCount = items.Count / ic };
-
-                //List<PaginationResponseDto<T>> items = await query.Select(x => new PaginationResponseDto<T>() { ItemCount = query.Count(), Items = query.ToList(), PageCount = query.Count() / ic }).Skip(gelecekKitap).Take(ic).ToListAsync();
-
-                //return items;
             }
         }
 
