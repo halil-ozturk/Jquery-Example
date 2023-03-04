@@ -19,12 +19,11 @@ namespace kitap_yazar.DOMAIN.Models
         public virtual ICollection<Book>? Book { get; set; }
 
 
-        #region Domain Metodları
         public Author SetName(string name)
         {
-            this.Name = name;
+            Name = name;
             return this;
         }
-        #endregion
+
     }
 }

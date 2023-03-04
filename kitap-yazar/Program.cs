@@ -1,7 +1,7 @@
+using kitap_yazar.BLL;
 using kitap_yazar.BLL.DBContext;
-using kitap_yazar.BLL.Services.Kitap;
-using kitap_yazar.BLL.Services.Yazar;
-using kitap_yazar.BLL.Services.Helpers;
+using kitap_yazar.BLL.Repositories.Abstract;
+using kitap_yazar.BLL.Repositories.Concrete;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +16,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddMvc();
 
-builder.Services.AddScoped<IKitapService, KitapService>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IPaginationService<>), typeof(PaginationService<>));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
