@@ -5,6 +5,7 @@
         TEntity GetByID(int id);
         bool Add(TEntity entity);
         IEnumerable<TEntity> GetAll(string entity);
+        IEnumerable<TEntity> GetByCount(string entity , int count);
 
     }
 }

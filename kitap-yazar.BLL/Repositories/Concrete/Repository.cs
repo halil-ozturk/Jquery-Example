@@ -26,6 +26,11 @@ namespace kitap_yazar.BLL.Concrete
             return _dbSet.Include(entity);
         }
 
+        public IEnumerable<TEntity> GetByCount(string entity, int count)
+        {
+            return _dbSet.Include(entity).Take(count);
+        }
+
         public TEntity GetByID(int id)
         {
             return _dbSet.Find(id);

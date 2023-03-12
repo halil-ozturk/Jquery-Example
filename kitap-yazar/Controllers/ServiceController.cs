@@ -28,6 +28,15 @@ namespace kitap_yazar.Controllers
             return Ok(cevap);
         }
 
+        [ActionName("gettenbooks")]
+        public async Task<IActionResult> GetByCount()
+        {
+            var cevap = _unitOfWork.BookRepository.GetByCount("Author",10).ToList();
+            _unitOfWork.Complete();
+            _unitOfWork.Dispose();
+            return Ok(cevap);
+        }
+
         [ActionName("getauthorbookcount")]
         [HttpGet]
         public async Task<IActionResult> GetAuthorBookCount()
