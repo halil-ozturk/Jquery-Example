@@ -18,7 +18,6 @@ namespace kitap_yazar.DOMAIN.Models
         public string Name { get; internal set; }
         public virtual ICollection<Book>? Book { get; set; }
 
-
         public Author SetName(string name)
         {
             Name = name;

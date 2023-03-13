@@ -1,6 +1,7 @@
 ﻿using kitap_yazar.BLL.Abstract;
 using kitap_yazar.DOMAIN.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace kitap_yazar.BLL.Concrete
 {
@@ -26,7 +27,7 @@ namespace kitap_yazar.BLL.Concrete
             return _dbSet.Include(entity);
         }
 
-        public IEnumerable<TEntity> GetByCount(string entity, int count)
+        public IQueryable<TEntity> GetByCount(string entity, int count)
         {
             return _dbSet.Include(entity).Take(count);
         }

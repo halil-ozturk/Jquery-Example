@@ -111,12 +111,6 @@
 		hideMessage();
 
 		$(document).ready(function () {
-			//let bookCount = 10;
-			//let pageNumber = 1;
-			//let postData = {
-			//	bc: bookCount,
-			//	pn: pageNumber,
-			//};
 			fillPagination(10);
 			$.ajax({
 				headers: {
@@ -125,7 +119,6 @@
 				},
 				type: 'GET',
 				url: '/api/service/getallbooks',
-				//data: postData,
 				success: function (response) {
 					books = response.items;
 					$("#dropdownMenu").append("<a onclick = 'fillPagination(" + 5 + "); selectPage(" + 1 + ", " + 5 + ")' class = 'dropdown-item'>5</a>");
@@ -135,15 +128,6 @@
 						let siraNo = i + 1;
 						$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + response[i].name + "</td><td>" + response[i].author.name + "</td><td style = 'display:none'>" + response[i].bookID + "</td>< /tr>");
 					}
-
-
-
-					//$.each(books, function (index, value) {
-					//	var author = value.author;
-					//	var pageNumber = index + 1;
-					//	let siraNo = index + 1;
-					//	$("#tableBody").append("<tr><td scope = 'row' >" + siraNo + "</td><td> " + value.name + "</td><td>" + author.name + "</td><td style = 'display:none'>" + author.bookID + "</td>< /tr>");
-					//})
 				},
 				error: function (xhr) {
 					$("#Message").html("");

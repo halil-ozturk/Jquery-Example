@@ -1,8 +1,10 @@
 using kitap_yazar.BLL;
+using kitap_yazar.BLL.DTOs.Book;
 using kitap_yazar.BLL.Repositories.Abstract;
 using kitap_yazar.DOMAIN.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace kitap_yazar.Controllers
 {
@@ -73,7 +75,6 @@ namespace kitap_yazar.Controllers
             var cevap = _unitOfWork.AuthorRepository.GetAll("Book").ToList();
             _unitOfWork.Complete();
             return Ok(cevap);
-
         }
 
         [ActionName("postauthor")]
